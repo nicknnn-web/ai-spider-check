@@ -3,72 +3,127 @@ import requests
 from bs4 import BeautifulSoup
 import urllib.parse
 
-# 1. 网页标题和说明 (你可以在这里随意修改文字)
-st.set_page_config(page_title="AI 鹰眼 - 网站 AI 友好度体检", page_icon="🦅")
-st.title("🦅 AI 鹰眼：你的网站能被大模型搜到吗？")
-st.markdown("输入你的网址，一键检测网站的 **AI 友好度 (GEO)** 评分！")
+# 1. 网页基础设置
+st.set_page_config(page_title="AI 友好度检测", page_icon="🍏", layout="centered")
 
-# 2. 输入框和按钮
-url_input = st.text_input("🔗 请输入要测试的网址 (需包含 http:// 或 https://):", "https://www.apple.com.cn/")
-submit_button = st.button("🚀 立即免费体检")
+# 2. 注入 Apple 风格的 CSS 魔法
+st.markdown("""
+<style>
+    /* 隐藏默认菜单和页脚，保持极简 */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* 整体背景与字体 */
+    .stApp {
+        background-color: #f5f5f7; /* 苹果经典淡灰底色 */
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    
+    /* 标题样式居中 */
+    .apple-title {
+        text-align: center;
+        font-weight: 700;
+        font-size: 2.5rem;
+        color: #1d1d1f;
+        margin-top: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    .apple-subtitle {
+        text-align: center;
+        font-weight: 400;
+        font-size: 1.2rem;
+        color: #86868b;
+        margin-bottom: 3rem;
+    }
 
-# 3. 当用户点击按钮后发生的事情
+    /* 输入框样式 */
+    .stTextInput>div>div>input {
+        border-radius: 14px;
+        background-color: #ffffff;
+        border: 1px solid #d2d2d7;
+        padding: 0.8rem 1rem;
+        font-size: 1.1rem;
+        color: #1d1d1f;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    /* 按钮样式：胶囊形状 + 苹果蓝 */
+    .stButton>button {
+        background-color: #0071e3;
+        color: white;
+        border-radius: 980px;
+        padding: 0.6rem 2rem;
+        font-size: 17px;
+        font-weight: 400;
+        border: none;
+        width: 100%;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+    .stButton>button:hover {
+        background-color: #0077ed;
+        transform: scale(1.01);
+    }
+    
+    /* 结果提示框圆角化 */
+    .stAlert {
+        border-radius: 16px;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# 3. 页面头部 (苹果风文案)
+st.markdown('<div class="apple-title">AI 友好度检测。</div>', unsafe_allow_html=True)
+st.markdown('<div class="apple-subtitle">一键洞悉，大模型眼中的你。</div>', unsafe_allow_html=True)
+
+# 4. 核心交互区
+url_input = st.text_input("", placeholder="输入网站地址 (例如：https://www.apple.com.cn)", label_visibility="collapsed")
+submit_button = st.button("开始检测")
+
+# 5. 诊断逻辑
 if submit_button:
     if not url_input.startswith("http"):
-        st.error("❌ 网址格式不对哦，请加上 http:// 或 https://")
+        st.error("提示：网址需以 http:// 或 https:// 开头。")
     else:
-        with st.spinner('🕸️ 正在模拟 AI 爬虫扫描中，请稍候...'):
-            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+        with st.spinner('正在获取结构数据...'):
+            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'}
             try:
-                # 获取网页内容
                 response = requests.get(url_input, headers=headers, timeout=10)
-                html_content = response.text
-                soup = BeautifulSoup(html_content, 'html.parser')
+                soup = BeautifulSoup(response.text, 'html.parser')
                 
-                st.subheader("📊 你的专属体检报告")
+                st.markdown("### 诊断结果")
                 
-                # --- 指标一：骨架清晰度 ---
-                st.markdown("### 🔍 指标一：网页骨架清晰度 (H1/H2标签)")
+                # 指标一：骨架
                 h1_tags = soup.find_all('h1')
-                h2_tags = soup.find_all('h2')
-                
-                # 用漂亮的指标卡片显示数字
-                col1, col2 = st.columns(2)
-                col1.metric("H1 主标题数量", len(h1_tags))
-                col2.metric("H2 副标题数量", len(h2_tags))
-                
                 if h1_tags:
-                    st.success("✅ 优秀！找到了 <h1> 标签，AI 能秒懂你的核心主题。")
+                    st.success(f"**结构清晰。** 发现 {len(h1_tags)} 个 H1 标签，AI 能精准捕捉页面核心主题。")
                 else:
-                    st.error("❌ 严重警告：缺失 <h1> 标签！AI 抓取时会找不到重点。")
+                    st.error("**缺少核心结构。** 未发现 H1 标签，AI 提取页面重点时可能产生偏差。")
 
-                # --- 指标二：纯文本含金量 ---
-                st.markdown("### 🔍 指标二：纯文本含金量 (信噪比)")
+                # 指标二：信噪比
                 for script in soup(["script", "style"]):
-                    script.extract() # 清除无用代码
-                
+                    script.extract()
                 pure_text = soup.get_text(strip=True)
-                ratio = (len(pure_text) / len(html_content)) * 100 if len(html_content) > 0 else 0
+                html_len = len(response.text)
+                ratio = (len(pure_text) / html_len) * 100 if html_len > 0 else 0
                 
-                st.metric("信噪比得分 (建议大于10%)", f"{ratio:.2f}%")
-                
-                if ratio < 10:
-                    st.warning("⚠️ 代码太臃肿！真实内容被大量无效代码淹没，AI 提取困难。")
+                if ratio >= 10:
+                    st.success(f"**信噪比优良 ({ratio:.1f}%)。** 代码整洁，核心文本易于被大模型向量化。")
                 else:
-                    st.success("✅ 信噪比健康，AI 提取正文非常轻松。")
+                    st.warning(f"**信噪比偏低 ({ratio:.1f}%)。** 页面代码较为冗余，可能降低 AI 抓取效率。")
 
-                # --- 指标三：爬虫拦截测试 ---
-                st.markdown("### 🔍 指标三：AI 爬虫大门测试 (robots.txt)")
+                # 指标三：协议
                 parsed_url = urllib.parse.urlparse(url_input)
                 robots_url = f"{parsed_url.scheme}://{parsed_url.netloc}/robots.txt"
                 robots_response = requests.get(robots_url, headers=headers, timeout=5)
                 
                 if robots_response.status_code == 200:
-                    st.info("ℹ️ 网站配置了 robots.txt，建议人工确认是否拦截了 AI 爬虫。")
+                    st.info("**已配置爬虫协议。** 检测到 robots.txt，请确保未拦截 GPTBot 等主流 AI。")
                 else:
-                    st.success("✅ 未检测到严格的 robots.txt 拦截，AI 默认可访问。")
+                    st.success("**无抓取限制。** 未检测到拦截规则，大模型可畅通访问。")
                     
-                st.balloons() # 庆祝动画 🎉
-                
             except Exception as e:
-                st.error(f"❌ 扫描失败，请检查网址是否正确或网站开启了防抓取保护。")
+                st.error("无法访问该站点。请检查网络或确认网站是否开启了反爬虫防护。")
