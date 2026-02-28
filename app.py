@@ -16,7 +16,7 @@ st.markdown("""
     
     /* 整体背景与字体 */
     .stApp {
-        background-color: #f5f5f7; /* 苹果经典淡灰底色 */
+        background-color: #f5f5f7;
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     
@@ -48,22 +48,28 @@ st.markdown("""
         box-shadow: 0 2px 5px rgba(0,0,0,0.02);
     }
 
-    /* 按钮样式：胶囊形状 + 苹果蓝 */
+    /* 🌟 修改核心：让按钮所在的容器使用 Flexbox 居中对齐 */
+    .stButton {
+        display: flex;
+        justify-content: center;
+    }
+
+    /* 按钮样式：胶囊形状 + 苹果蓝 + 固定宽度 */
     .stButton>button {
         background-color: #0071e3;
         color: white;
         border-radius: 980px;
         padding: 0.6rem 2rem;
         font-size: 17px;
-        font-weight: 400;
+        font-weight: 500;
         border: none;
-        width: 100%;
+        width: 200px; /* 💡 把原本的 100% 改成了固定宽度 200px */
         transition: all 0.3s ease;
-        margin-top: 1rem;
+        margin-top: 1.5rem;
     }
     .stButton>button:hover {
         background-color: #0077ed;
-        transform: scale(1.01);
+        transform: scale(1.02);
     }
     
     /* 结果提示框圆角化 */
@@ -77,7 +83,7 @@ st.markdown("""
 
 # 3. 页面头部 (苹果风文案)
 st.markdown('<div class="apple-title">AI 友好度检测。</div>', unsafe_allow_html=True)
-st.markdown('<div class="apple-subtitle">一键洞悉，Page in the eys of Ai。</div>', unsafe_allow_html=True)
+st.markdown('<div class="apple-subtitle">一键洞悉，大模型眼中的你。</div>', unsafe_allow_html=True)
 
 # 4. 核心交互区
 url_input = st.text_input("", placeholder="输入网站地址 (例如：https://www.apple.com.cn)", label_visibility="collapsed")
