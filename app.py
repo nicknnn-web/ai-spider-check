@@ -48,14 +48,13 @@ st.markdown("""
         box-shadow: 0 2px 5px rgba(0,0,0,0.02);
     }
 
-    /* 让按钮所在的容器使用 Flexbox 居中对齐 */
-    .stButton {
-        display: flex;
-        justify-content: center;
+    /* 🌟 强制按钮外层容器文本居中 */
+    div.stButton {
+        text-align: center;
     }
 
-    /* 按钮样式：胶囊形状 + 苹果蓝 + 固定宽度 */
-    .stButton>button {
+    /* 🌟 按钮样式：胶囊形状 + 苹果蓝 + 固定宽度 + 绝对水平居中 */
+    div.stButton > button {
         background-color: #0071e3;
         color: white;
         border-radius: 980px;
@@ -65,9 +64,10 @@ st.markdown("""
         border: none;
         width: 200px; 
         transition: all 0.3s ease;
-        margin-top: 1.5rem;
+        margin: 1.5rem auto 0 auto; /* 用 margin auto 强制它相对输入框和页面绝对居中 */
+        display: block; /* 配合 auto margin 使用 */
     }
-    .stButton>button:hover {
+    div.stButton > button:hover {
         background-color: #0077ed;
         transform: scale(1.02);
     }
@@ -82,9 +82,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 3. 页面头部 (苹果风文案)
-# 💡 这里的句号已经去掉了
 st.markdown('<div class="apple-title">AI 友好度检测</div>', unsafe_allow_html=True)
-st.markdown('<div class="apple-subtitle">一键洞悉，大模型眼中的你。</div>', unsafe_allow_html=True)
+st.markdown('<div class="apple-subtitle">一键洞悉，Page in the eyes of Ai</div>', unsafe_allow_html=True)
 
 # 4. 核心交互区
 url_input = st.text_input("", placeholder="输入网站地址 (例如：https://www.apple.com.cn)", label_visibility="collapsed")
