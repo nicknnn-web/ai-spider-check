@@ -77,7 +77,7 @@ st.markdown("""
 
 # 3. 页面头部 (苹果风文案)
 st.markdown('<div class="apple-title">AI 友好度检测。</div>', unsafe_allow_html=True)
-st.markdown('<div class="apple-subtitle">一键洞悉，Page in Ai。</div>', unsafe_allow_html=True)
+st.markdown('<div class="apple-subtitle">一键洞悉，Page in the eys of Ai。</div>', unsafe_allow_html=True)
 
 # 4. 核心交互区
 url_input = st.text_input("", placeholder="输入网站地址 (例如：https://www.apple.com.cn)", label_visibility="collapsed")
