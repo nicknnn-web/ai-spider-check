@@ -48,7 +48,7 @@ st.markdown("""
         box-shadow: 0 2px 5px rgba(0,0,0,0.02);
     }
 
-    /* 🌟 修改核心：让按钮所在的容器使用 Flexbox 居中对齐 */
+    /* 让按钮所在的容器使用 Flexbox 居中对齐 */
     .stButton {
         display: flex;
         justify-content: center;
@@ -63,7 +63,7 @@ st.markdown("""
         font-size: 17px;
         font-weight: 500;
         border: none;
-        width: 200px; /* 💡 把原本的 100% 改成了固定宽度 200px */
+        width: 200px; 
         transition: all 0.3s ease;
         margin-top: 1.5rem;
     }
@@ -82,7 +82,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 3. 页面头部 (苹果风文案)
-st.markdown('<div class="apple-title">AI 友好度检测。</div>', unsafe_allow_html=True)
+# 💡 这里的句号已经去掉了
+st.markdown('<div class="apple-title">AI 友好度检测</div>', unsafe_allow_html=True)
 st.markdown('<div class="apple-subtitle">一键洞悉，大模型眼中的你。</div>', unsafe_allow_html=True)
 
 # 4. 核心交互区
